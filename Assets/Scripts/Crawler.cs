@@ -14,17 +14,18 @@ public class Crawler : Enemy
     private float attackOffset = 1.6f;
     private bool playerWasDetected = false;
     private bool detected;
-
+    private Transform playerTransform;
 
     protected override void Start()
     {
         base.Start();
         defaultSpeed = moveSpeed;
-        
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null) playerTransform = playerObj.transform;
+
     }
     private void Update()
     {
-        PlayerDetected();
 
         if (PlayerDetected())
         {
@@ -37,15 +38,11 @@ public class Crawler : Enemy
             attackTimer = 0;
             moveSpeed = 0;
         }
-        if (!attackStarted)
-        {
-            moveSpeed = defaultSpeed;
-            detected = false;
-        }
+        
         if (attackStarted)
         {
             attackTimer += Time.deltaTime;
-
+            playerWasDetected = false; 
             if (attackTimer >= waitbeforeAttack)
             {
                 if (hp >= 250) 
@@ -57,18 +54,27 @@ public class Crawler : Enemy
                 attackTimer = 0;
                 moveSpeed = defaultSpeed;
             }
-            playerWasDetected = false;          
+                     
             return;
         }
-        
+        else if (!attackStarted)
+        {
+            moveSpeed = defaultSpeed;
+            detected = false;
+        }
     }
 
 
     private void RangedAttack()
     {
-        Vector3 pos = new Vector3(transform.position.x , transform.position.y + attackOffset, 0);
-        GameObject bullet = Instantiate(bulletPrefab, pos, Quaternion.identity);
-        bullet.GetComponent<Bullet>().direction = Vector2.up;
+        //GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        //if (playerObj != null) return;
+        Vector3 spawnPos = new Vector3(transform.position.x, transform.position.y + attackOffset, 0);
+        GameObject bulletObj = Instantiate(bulletPrefab, spawnPos, Quaternion.identity);
+        Bullet bulletScript = bulletObj.GetComponent<Bullet>();
+        Vector2 fireDirection = ((Vector2)playerTransform.position - (Vector2)spawnPos).normalized;
+        bulletScript.direction = fireDirection;
+
     }
     private bool PlayerDetected()
     {

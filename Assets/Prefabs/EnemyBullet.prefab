@@ -101,8 +101,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3555225492594928770}
   - component: {fileID: 2799997212914262357}
-  - component: {fileID: 5409141301243181062}
   - component: {fileID: 1329068494698903796}
+  - component: {fileID: 1289592748735771064}
   m_Layer: 8
   m_Name: EnemyBullet
   m_TagString: Untagged
@@ -162,7 +162,22 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
---- !u!50 &5409141301243181062
+--- !u!114 &1329068494698903796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2664030240398874488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8f480e0d2e0a2e46b5549e617787676, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyBullet
+  speed: 350
+  direction: {x: 0, y: 0}
+  player: {fileID: 0}
+--- !u!50 &1289592748735771064
 Rigidbody2D:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -185,21 +200,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &1329068494698903796
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2664030240398874488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8f480e0d2e0a2e46b5549e617787676, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyBullet
-  speed: 350
-  direction: {x: 0, y: 0}

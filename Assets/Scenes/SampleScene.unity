@@ -392,7 +392,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -7.66, y: -3.92, z: 0}
-  m_LocalScale: {x: 0.35263544, y: 0.35263544, z: 0.35263544}
+  m_LocalScale: {x: 0.2878034, y: 0.2878034, z: 0.2878034}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1342497347}
@@ -2999,7 +2999,7 @@ GameObject:
   - component: {fileID: 1935558616}
   - component: {fileID: 1935558615}
   m_Layer: 0
-  m_Name: meleeAttack
+  m_Name: shield
   m_TagString: Melee
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3119,8 +3119,8 @@ Transform:
   m_GameObject: {fileID: 1935558614}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.0000000074506, z: 0}
-  m_LocalScale: {x: 1, y: 0.35833701, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.374, y: 2.2859478, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 210769531}
