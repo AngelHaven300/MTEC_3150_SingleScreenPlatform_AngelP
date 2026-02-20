@@ -5,7 +5,6 @@ public class Bullet : MonoBehaviour
     public float speed = 10;
     public Vector2 direction;
     protected Rigidbody2D rb;
-    //protected PlayerController player;
     protected Transform target;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created

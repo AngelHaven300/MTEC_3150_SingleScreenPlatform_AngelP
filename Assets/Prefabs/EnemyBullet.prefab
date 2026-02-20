@@ -174,9 +174,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8f480e0d2e0a2e46b5549e617787676, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBullet
-  speed: 350
+  speed: 3
   direction: {x: 0, y: 0}
-  player: {fileID: 0}
 --- !u!50 &1289592748735771064
 Rigidbody2D:
   serializedVersion: 5
@@ -192,7 +191,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

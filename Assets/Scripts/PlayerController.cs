@@ -94,8 +94,6 @@ public class PlayerController : MonoBehaviour
             }
         }
         WhenOnPlatform();
-        
-        //transform.Translate(xMove * movementSpeed * Time.deltaTime, 0, 0);
     }
 
     private void FixedUpdate()
