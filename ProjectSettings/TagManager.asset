@@ -8,6 +8,8 @@ TagManager:
   - Melee
   - platform
   - shield
+  - Enemy
+  - ground
   layers:
   - Default
   - TransparentFX

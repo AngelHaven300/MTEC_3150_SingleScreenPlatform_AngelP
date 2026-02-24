@@ -6,7 +6,8 @@ public class PowerUp : MonoBehaviour
     public CircleCollider2D cc;
     public Color powerUpColor;
     protected PlayerController player;
-    private bool effectsApplied = false;
+    protected MovingPlatform movingPlatform;
+    [HideInInspector] public bool effectsApplied = false;
     public float effectDuration;
     private float timeElapsedSinceEffect;
 

@@ -15,7 +15,7 @@ public class Crawler : Enemy
     private float nextAttackTime = 0f;
     public float attackCooldown = 2f;
     private Transform playerTransform;
-
+    public int damageAmount = 1;
     protected override void Start()
     {
         base.Start();
@@ -28,7 +28,7 @@ public class Crawler : Enemy
     protected override void Update()
     {
        
-        if (movingTimer < timeToWaitBeforeChangingDirection)
+        /*if (movingTimer < timeToWaitBeforeChangingDirection)
         {
             movingTimer += Time.deltaTime;
 
@@ -37,7 +37,7 @@ public class Crawler : Enemy
         {
             direction *= -1;
             movingTimer = 0;
-        }
+        }*/
         transform.Translate(direction * moveSpeed * Time.deltaTime, 0, 0);
 
         if (!attackStarted && Time.time >= nextAttackTime && PlayerDetected())
@@ -69,11 +69,13 @@ public class Crawler : Enemy
     private void RangedAttack()
     {
         Vector3 spawnPos = new Vector3(transform.position.x, transform.position.y + attackOffset, 0);
-        GameObject bulletObj = Instantiate(bulletPrefab, spawnPos, Quaternion.identity);
-        Bullet bulletScript = bulletObj.GetComponent<Bullet>();
+        GameObject bullet = Instantiate(bulletPrefab, spawnPos, Quaternion.identity);
+        var bScript = bullet.GetComponent<Bullet>();
         Vector2 fireDirection = ((Vector2)playerTransform.position - (Vector2)spawnPos).normalized;
-        bulletScript.direction = fireDirection;
+        bScript.direction = fireDirection;
+        bScript.DamageAmount = damageAmount ;
     }
+
     private bool PlayerDetected()
     {
         Vector2 dir = Vector2.up * 0.9f;
@@ -83,5 +85,21 @@ public class Crawler : Enemy
 
         return hit.collider !=null;
     }
-    
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            var player = collision.GetComponent<PlayerController>();
+            if (player != null)
+            {
+                player.Health -= 1;
+                Debug.Log("Subtract player Health");
+                direction *= -1;
+            }
+        }
+        if (collision.CompareTag("Wall"))
+        {
+            direction *= -1;
+        }
+    }
 }

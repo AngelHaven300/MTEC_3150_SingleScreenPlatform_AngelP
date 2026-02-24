@@ -9,11 +9,10 @@ public class EnemyBullet : Bullet
         {
             direction = ((Vector2)target.position - rb.position).normalized;
 
-            
-           
+
+
         }
         rb.linearVelocity = direction * speed;
     }
-    
     
 }

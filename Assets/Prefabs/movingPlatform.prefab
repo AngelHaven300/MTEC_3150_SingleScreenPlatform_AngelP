@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
   direction: 1
-  movingSpeed: 1
+  movingSpeed: 3
 --- !u!1 &3398637635381075738
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,6 +6,8 @@ public class Bullet : MonoBehaviour
     public Vector2 direction;
     protected Rigidbody2D rb;
     protected Transform target;
+    public int DamageAmount = 1;
+    
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     protected virtual void Start()
@@ -29,7 +31,24 @@ public class Bullet : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        Destroy(gameObject);
+        if (collision.gameObject.CompareTag("Enemy")) 
+        {
+            Enemy enemyHit = collision.gameObject.GetComponent<Enemy>();
+            enemyHit.DecrementHP(DamageAmount);
+            Destroy(gameObject);
+        }
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            var player = collision.gameObject.GetComponent<PlayerController>();
+            player.IncrementHP(-DamageAmount);
+            Destroy(gameObject);
+        }
+        if (collision.gameObject.CompareTag("Wall") | collision.gameObject.CompareTag("ground"))
+        {
+            Destroy(gameObject);
+        }
+        
+     
     }
     // Update is called once per frame
 }

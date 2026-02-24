@@ -36,5 +36,16 @@ public class Enemy : MonoBehaviour
     {
        // rb.linearVelocity = new Vector2(direction * moveSpeed * Time.deltaTime, rb.linearVelocity.y);
     }
+    public void DecrementHP(int damage)
+    {
+        if (hp - damage > 0)
+        {
+            hp-= damage;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
 }

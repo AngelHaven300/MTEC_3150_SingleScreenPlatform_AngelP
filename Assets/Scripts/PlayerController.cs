@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public int Health = 5;
     public float movementSpeed = 1.0f;
     private float xMove;
     private float xVelocity;
@@ -13,12 +14,15 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public float originalFall = 1.0f;
     private float facingDown;
     private float facingDirection;
-    private float attackOffset = 0.6f;
-    
+    private float attackOffset = 0.8f;
+
+    private float shieldOffset = 1f;
     public GameObject meleeAttack;
+    public GameObject meleeShield;
     public float meleeDuration = 0.25f;
     private float timeElapsedSinceMelee = 0.0f;
     private bool meleeTriggered = false;
+    
     
     private float shootDown;
     public GameObject bulletPrefab;
@@ -26,7 +30,8 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool fullAuto = false;
     [HideInInspector] public float fireRate = 0.1f;   
     private float nextFireTime = 0f;
-    
+    public int bulletDamageAmount = 1;
+    //public int damageAmount = 1;
     
 
     private Rigidbody2D rb;
@@ -89,6 +94,7 @@ public class PlayerController : MonoBehaviour
             else
             {
                 meleeAttack.SetActive(false);
+                meleeShield.SetActive(false);
                 timeElapsedSinceMelee = 0;
                 meleeTriggered = false;
             }
@@ -120,23 +126,39 @@ public class PlayerController : MonoBehaviour
     private void MeleeAttack()
     {
         meleeTriggered = true;
-        meleeAttack.SetActive(true);
-        meleeAttack.transform.localPosition = new Vector3(attackOffset * facingDirection, meleeAttack.transform.localPosition.y, 0); 
+
+        if (facingDown == -1)
+        {
+            meleeShield.SetActive(true);
+            meleeShield.transform.localPosition = new Vector3(meleeShield.transform.localPosition.x, shieldOffset * facingDown, 0);
+        }
+        else
+        {
+            meleeAttack.SetActive(true);
+            meleeAttack.transform.localPosition = new Vector3(shieldOffset * facingDirection, meleeAttack.transform.localPosition.y, 0); 
+
+        }
     }
     private void RangedAttack()
     {        
+
         if (facingDown == -1)
         {
             Vector3 posD = new Vector3(transform.position.x, transform.position.y + (attackOffset * facingDown), 0);
             GameObject bulletD = Instantiate(bulletDPrefab, posD, Quaternion.identity);
             bulletD.GetComponent<Bullet>().direction = new Vector2(0, facingDown);
+            var bScript = bulletD.GetComponent<Bullet>();
+            bScript.DamageAmount = bulletDamageAmount;
         }
         else
         {
             Vector3 pos = new Vector3(transform.position.x + (attackOffset * facingDirection), transform.position.y, 0);
             GameObject bullet = Instantiate(bulletPrefab, pos, Quaternion.identity);
             bullet.GetComponent<Bullet>().direction = new Vector2(facingDirection, 0);
+            var bScript = bullet.GetComponent<Bullet>();
+            bScript.DamageAmount = bulletDamageAmount;
         }
+        
     }
     
     private bool IsGrounded()
@@ -152,7 +174,7 @@ public class PlayerController : MonoBehaviour
     {
         if (IsGrounded())
         {
-            Debug.Log("a");
+            //Debug.Log("a");
             float radius = GetComponent<Collider2D>().bounds.extents.x;
             float dist = GetComponent<Collider2D>().bounds.extents.y;
             RaycastHit2D hit;
@@ -172,6 +194,17 @@ public class PlayerController : MonoBehaviour
         }
         
     }
+    public void IncrementHP(int amount)
+    {
+        if (Health + amount > 0)
+        {
+            Health += amount;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
@@ -179,6 +212,7 @@ public class PlayerController : MonoBehaviour
         if (collision.GetComponent<PowerUp>() != null)
         {
             collision.GetComponent<PowerUp>().ApplyEffect();
+
             Debug.Log("EffectApplied");
         }
     }
