@@ -71,9 +71,13 @@ public class Crawler : Enemy
         Vector3 spawnPos = new Vector3(transform.position.x, transform.position.y + attackOffset, 0);
         GameObject bullet = Instantiate(bulletPrefab, spawnPos, Quaternion.identity);
         var bScript = bullet.GetComponent<Bullet>();
-        Vector2 fireDirection = ((Vector2)playerTransform.position - (Vector2)spawnPos).normalized;
-        bScript.direction = fireDirection;
-        bScript.DamageAmount = damageAmount ;
+        var player = GetComponent<PlayerController>();
+        if (player != null)
+        {
+            Vector2 fireDirection = ((Vector2)playerTransform.position - (Vector2)spawnPos).normalized;
+            bScript.direction = fireDirection;
+            bScript.DamageAmount = damageAmount;
+        }
     }
 
     private bool PlayerDetected()
@@ -91,8 +95,8 @@ public class Crawler : Enemy
         {
             var player = collision.GetComponent<PlayerController>();
             if (player != null)
-            {
-                player.Health -= 1;
+            {              
+                player.IncrementHP(-damageAmount);
                 Debug.Log("Subtract player Health");
                 direction *= -1;
             }

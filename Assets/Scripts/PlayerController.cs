@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     private float facingDirection;
     private float attackOffset = 0.8f;
 
-    private float shieldOffset = 1f;
+    private float shieldOffset = 0.8f;
     public GameObject meleeAttack;
     public GameObject meleeShield;
     public float meleeDuration = 0.25f;
@@ -31,6 +31,11 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public float fireRate = 0.1f;   
     private float nextFireTime = 0f;
     public int bulletDamageAmount = 1;
+    //public float activateFastfall;
+    public float fastFall = 5;
+    private float meleeCooldownTime = 1f;
+    private float elapsedTimeSinceMelee;
+    private bool fastFallFlag = false;
     //public int damageAmount = 1;
     
 
@@ -39,6 +44,7 @@ public class PlayerController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        elapsedTimeSinceMelee = meleeCooldownTime;
         rb = GetComponent<Rigidbody2D>();
         facingDirection = 1;
         facingDown = 0;
@@ -48,15 +54,22 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        elapsedTimeSinceMelee += Time.deltaTime;
         xMove = Input.GetAxisRaw("Horizontal");
         shootDown = Input.GetAxisRaw("Vertical");
+        if (Input.GetKeyDown(KeyCode.LeftShift)) fastFallFlag = true;
+
         if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
         {
             jumpFlag = true;
         }
         if (Input.GetMouseButtonDown(0))
         {
-            MeleeAttack();
+            if (elapsedTimeSinceMelee >= meleeCooldownTime)
+            {
+               MeleeAttack();
+                elapsedTimeSinceMelee = 0;
+            }   
         }
         if (Input.GetMouseButtonDown(1))
         {
@@ -73,13 +86,13 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        if (shootDown == -1)
+        if (shootDown < 0)
         {
-            facingDown = shootDown;
+            facingDown = -1;
         }
-        else if (shootDown != -1)
+        else 
         {
-            facingDown = shootDown;
+            facingDown = 0;
         } 
         if (xMove != 0)
         {
@@ -110,6 +123,15 @@ public class PlayerController : MonoBehaviour
         if (rb.linearVelocityY < 0)
         {
             GetComponent<Rigidbody2D>().gravityScale = slowFall;
+
+        }
+        else if (fastFallFlag)
+        {
+            if (rb.linearVelocityY > 0)
+            {
+                GetComponent<Rigidbody2D>().gravityScale = fastFall;
+
+            }
         }
         else
         {
@@ -127,14 +149,16 @@ public class PlayerController : MonoBehaviour
     {
         meleeTriggered = true;
 
-        if (facingDown == -1)
+        if (facingDown < -0.1f)
         {
             meleeShield.SetActive(true);
+            meleeAttack.SetActive(false);
             meleeShield.transform.localPosition = new Vector3(meleeShield.transform.localPosition.x, shieldOffset * facingDown, 0);
         }
         else
         {
             meleeAttack.SetActive(true);
+            meleeShield.SetActive(false);
             meleeAttack.transform.localPosition = new Vector3(shieldOffset * facingDirection, meleeAttack.transform.localPosition.y, 0); 
 
         }

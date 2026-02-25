@@ -622,12 +622,13 @@ MonoBehaviour:
   originalFall: 1
   meleeAttack: {fileID: 1935558614}
   meleeShield: {fileID: 984109290}
-  meleeDuration: 0.25
+  meleeDuration: 0.2
   bulletPrefab: {fileID: 275274430432783412, guid: 1b45d70d85cfa1c438cf99df72be34eb, type: 3}
   bulletDPrefab: {fileID: 3878846669026743957, guid: 72dc599a368253a4faae76b97d8fe242, type: 3}
   fullAuto: 0
   fireRate: 0.1
   bulletDamageAmount: 1
+  fastFall: 5
 --- !u!50 &210769530
 Rigidbody2D:
   serializedVersion: 5
@@ -664,7 +665,7 @@ Transform:
   m_GameObject: {fileID: 210769527}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.66, y: -3.89, z: 0}
+  m_LocalPosition: {x: -7.66, y: -3.62, z: 0}
   m_LocalScale: {x: 0.592906, y: 0.592906, z: 0.592906}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -707,7 +708,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0760418, y: -0.0069128275}
+  m_Offset: {x: -0.07604182, y: -0.007101208}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -717,7 +718,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.1520834, y: 1.3732975}
+  m_Size: {x: 1.1520834, y: 1.3736742}
   m_EdgeRadius: 0
 --- !u!1 &232630186
 GameObject:
@@ -2712,6 +2713,8 @@ GameObject:
   - component: {fileID: 984109291}
   - component: {fileID: 984109293}
   - component: {fileID: 984109292}
+  - component: {fileID: 984109294}
+  - component: {fileID: 984109295}
   m_Layer: 0
   m_Name: shield down
   m_TagString: Melee
@@ -2823,7 +2826,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -2839,6 +2842,45 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!50 &984109294
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984109290}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!114 &984109295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984109290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f45120d21a50611488ca92e107788a46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::shieldScript
 --- !u!1001 &996535138
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5201,6 +5243,8 @@ GameObject:
   - component: {fileID: 1935558617}
   - component: {fileID: 1935558616}
   - component: {fileID: 1935558615}
+  - component: {fileID: 1935558618}
+  - component: {fileID: 1935558619}
   m_Layer: 0
   m_Name: shield
   m_TagString: Melee
@@ -5297,7 +5341,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -5328,6 +5372,45 @@ Transform:
   m_Children: []
   m_Father: {fileID: 210769531}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &1935558618
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1935558614}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!114 &1935558619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1935558614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f45120d21a50611488ca92e107788a46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::shieldScript
 --- !u!1 &1939015422
 GameObject:
   m_ObjectHideFlags: 0
