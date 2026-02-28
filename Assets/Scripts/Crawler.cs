@@ -1,8 +1,10 @@
 using UnityEngine;
 using UnityEngine.Timeline;
+using UnityEngine.UI;
 
 public class Crawler : Enemy
 {
+    private Animator animator;
     public float range;
     public LayerMask playerLayer;
     private float defaultSpeed;
@@ -11,33 +13,28 @@ public class Crawler : Enemy
     private bool attackStarted = false;
     private float attackTimer = 0f;
     public float waitbeforeAttack;
-    private float attackOffset = 1.6f;
+    private float attackOffset = 1.8f;
     private float nextAttackTime = 0f;
     public float attackCooldown = 2f;
     private Transform playerTransform;
     public int damageAmount = 1;
+    
+    public Image lastPlayerHeart;
     protected override void Start()
     {
         base.Start();
+        animator = GetComponentInChildren<Animator>();
+        
         direction = -1;
         defaultSpeed = moveSpeed;
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null) playerTransform = playerObj.transform;
-
+        
+            hp = maxhp;
+        
     }
     protected override void Update()
     {
-       
-        /*if (movingTimer < timeToWaitBeforeChangingDirection)
-        {
-            movingTimer += Time.deltaTime;
-
-        }
-        else
-        {
-            direction *= -1;
-            movingTimer = 0;
-        }*/
         transform.Translate(direction * moveSpeed * Time.deltaTime, 0, 0);
 
         if (!attackStarted && Time.time >= nextAttackTime && PlayerDetected())
@@ -45,6 +42,7 @@ public class Crawler : Enemy
             attackStarted = true;
             attackTimer = 0;
             moveSpeed = 0;
+            animator.SetFloat("speed", moveSpeed);
         }
 
         if (attackStarted)
@@ -53,17 +51,30 @@ public class Crawler : Enemy
 
             if (attackTimer >= waitbeforeAttack)
             {
-                if (hp >= 250)
+                if (hp <= 250)
                 {
                     RangedAttack();
                 }
-                attackStarted = false;
+                else
+                {
+                    RangedAttack();
+                }
+                    attackStarted = false;
                 moveSpeed = defaultSpeed;
                 nextAttackTime = Time.time + attackCooldown;
+                
             }
             return;
         }
+        
         moveSpeed = defaultSpeed;
+        float fillAmount = (float)hp / (float)maxhp;
+        hpBar.fillAmount = fillAmount;
+        animator.SetFloat("speed", moveSpeed);
+        //killPlayerHealth = lastPlayerHeart.enabled;
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj == null) lastPlayerHeart.enabled = false;
+
     }
 
     private void RangedAttack()

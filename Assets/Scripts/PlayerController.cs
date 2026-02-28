@@ -1,63 +1,73 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Health Settings")]
     public int Health = 5;
+    public Image heartTwo;
+    public Image heartThree;
+    public Image heartFour;
+    public Image heartFive;
+    public Image shieldBar;
+    public int maxHealth;
+
+    [Header("Movement Settings")]
+    public LayerMask ground;
+    public int fastFallStrength;
     public float movementSpeed = 1.0f;
+    public float jumpSpeed = 1.0f;
+    //public float fastFall = 5; 
     private float xMove;
     private float xVelocity;
-    public float jumpSpeed = 1.0f;
-    public LayerMask ground;
+    private float facingDirection;
+    private float facingDown;
     private bool jumpFlag = false;
+    private bool fastFallFlag = false;
+    private SpriteRenderer shieldSr;
+    private Rigidbody2D rb;
     [HideInInspector] public float slowFall = 1.0f;
     [HideInInspector] public float originalFall = 1.0f;
-    private float facingDown;
-    private float facingDirection;
-    private float attackOffset = 0.8f;
 
-    private float shieldOffset = 0.8f;
+    [Header("Weapon Settings")]
     public GameObject meleeAttack;
     public GameObject meleeShield;
-    public float meleeDuration = 0.25f;
-    private float timeElapsedSinceMelee = 0.0f;
-    private bool meleeTriggered = false;
-    
-    
-    private float shootDown;
     public GameObject bulletPrefab;
     public GameObject bulletDPrefab;
-    [HideInInspector] public bool fullAuto = false;
-    [HideInInspector] public float fireRate = 0.1f;   
-    private float nextFireTime = 0f;
     public int bulletDamageAmount = 1;
-    //public float activateFastfall;
-    public float fastFall = 5;
+    public float meleeDuration = 0.25f;
+    private float attackOffset = 0.8f;
+    private float shieldOffset = 0.8f;
+    private float timeElapsedSinceMelee = 0.0f;
+    private float elapsedTimeSinceShield;
     private float meleeCooldownTime = 1f;
-    private float elapsedTimeSinceMelee;
-    private bool fastFallFlag = false;
-    //public int damageAmount = 1;
+    private float shootDown;
+    private float nextFireTime = 0f;
+    private bool meleeTriggered = false;
+    [HideInInspector] public bool fullAuto = false;
+    [HideInInspector] public float fireRate = 0.1f; 
     
-
-    private Rigidbody2D rb;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        elapsedTimeSinceMelee = meleeCooldownTime;
+        elapsedTimeSinceShield = meleeCooldownTime;
         rb = GetComponent<Rigidbody2D>();
+        shieldSr = meleeShield.GetComponent<SpriteRenderer>();
         facingDirection = 1;
         facingDown = 0;
         originalFall = rb.gravityScale;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        elapsedTimeSinceMelee += Time.deltaTime;
+        elapsedTimeSinceShield += Time.deltaTime;
         xMove = Input.GetAxisRaw("Horizontal");
         shootDown = Input.GetAxisRaw("Vertical");
+        AmountOfHearts();
         if (Input.GetKeyDown(KeyCode.LeftShift)) fastFallFlag = true;
+        else
+        {
+            fastFallFlag = false;
+        }
 
         if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
         {
@@ -65,10 +75,10 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(0))
         {
-            if (elapsedTimeSinceMelee >= meleeCooldownTime)
+            if (elapsedTimeSinceShield >= meleeCooldownTime)
             {
                MeleeAttack();
-                elapsedTimeSinceMelee = 0;
+                elapsedTimeSinceShield = 0;
             }   
         }
         if (Input.GetMouseButtonDown(1))
@@ -110,9 +120,13 @@ public class PlayerController : MonoBehaviour
                 meleeShield.SetActive(false);
                 timeElapsedSinceMelee = 0;
                 meleeTriggered = false;
+                
             }
+            
         }
-        WhenOnPlatform();
+        float fillAmount = Mathf.Clamp01(elapsedTimeSinceShield / meleeCooldownTime);
+        shieldBar.fillAmount = fillAmount;
+        WhenOnPlatform();       
     }
 
     private void FixedUpdate()
@@ -127,9 +141,9 @@ public class PlayerController : MonoBehaviour
         }
         else if (fastFallFlag)
         {
-            if (rb.linearVelocityY > 0)
+            if (rb.linearVelocityY < 0)
             {
-                GetComponent<Rigidbody2D>().gravityScale = fastFall;
+                GetComponent<Rigidbody2D>().gravityScale *= fastFallStrength;
 
             }
         }
@@ -144,7 +158,7 @@ public class PlayerController : MonoBehaviour
             jumpFlag = false;
         }
     }
-    
+
     private void MeleeAttack()
     {
         meleeTriggered = true;
@@ -153,16 +167,25 @@ public class PlayerController : MonoBehaviour
         {
             meleeShield.SetActive(true);
             meleeAttack.SetActive(false);
-            meleeShield.transform.localPosition = new Vector3(meleeShield.transform.localPosition.x, shieldOffset * facingDown, 0);
+            meleeShield.transform.localPosition = new Vector2(meleeShield.transform.localPosition.x, shieldOffset * facingDown);
+
+            
+            meleeShield.transform.rotation = Quaternion.Euler(0, 0, -90);
         }
         else
         {
             meleeAttack.SetActive(true);
             meleeShield.SetActive(false);
-            meleeAttack.transform.localPosition = new Vector3(shieldOffset * facingDirection, meleeAttack.transform.localPosition.y, 0); 
+            meleeAttack.transform.localPosition = new Vector2(shieldOffset * facingDirection, meleeAttack.transform.localPosition.y);
 
+
+            //meleeAttack.transform.localScale = new Vector2(facingDirection, 1);
+
+            if (facingDirection > 0) { meleeAttack.transform.rotation = Quaternion.identity; }
+            else if (facingDirection < 0) { meleeAttack.transform.rotation = Quaternion.Euler(0, -180, 0); }
         }
     }
+
     private void RangedAttack()
     {        
 
@@ -227,6 +250,50 @@ public class PlayerController : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+    }
+
+    public void AmountOfHearts()
+    {
+        if (Health == 5)
+        {
+           
+            heartTwo.enabled = true;
+            heartThree.enabled = true;
+            heartFour.enabled = true;
+            heartFive.enabled = true;
+        } 
+        else if (Health == 4)
+        {
+            
+            heartTwo.enabled = true;
+            heartThree.enabled = true;
+            heartFour.enabled = true;
+            heartFive.enabled = false;
+        }
+        else if (Health == 3)
+        {
+            
+            heartTwo.enabled = true;
+            heartThree.enabled = true;
+            heartFour.enabled = false;
+            heartFive.enabled = false;
+        }
+        else if (Health == 2)
+        {
+            
+            heartTwo.enabled = true;
+            heartThree.enabled = false;
+            heartFour.enabled = false;
+            heartFive.enabled = false;
+        }
+        else if (Health == 1)
+        {
+            
+            heartTwo.enabled = false;
+            heartThree.enabled = false;
+            heartFour.enabled = false;
+            heartFive.enabled = false;
         }
     }
 

@@ -1,13 +1,17 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
     public float moveSpeed;
     public int hp;
+    public int maxhp;
     public float direction;
     protected Rigidbody2D rb;
     protected float movingTimer = 0;
     protected float timeToWaitBeforeChangingDirection = 5.5f;
+    public Image hpBar;
+    
 
 
     protected virtual void Start()

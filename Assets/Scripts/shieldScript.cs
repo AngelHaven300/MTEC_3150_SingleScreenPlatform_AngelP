@@ -20,7 +20,6 @@ public class shieldScript : MonoBehaviour
         if (collision.GetComponent<Crawler>() != null)
         {
             var Enemy = collision.GetComponent<Crawler>();
-            //var DamageEnemy = collision.GetComponent<Crawler>();
             Enemy.direction *= -1;
             Enemy.DecrementHP(damageAmount);
 

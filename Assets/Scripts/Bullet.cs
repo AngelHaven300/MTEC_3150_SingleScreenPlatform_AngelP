@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class Bullet : MonoBehaviour
 {
     public float speed = 10;
@@ -7,6 +8,8 @@ public class Bullet : MonoBehaviour
     protected Rigidbody2D rb;
     protected Transform target;
     public int DamageAmount = 1;
+    protected Crawler crawler;
+    
     
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -27,6 +30,7 @@ public class Bullet : MonoBehaviour
     protected virtual void FixedUpdate()
     {
         rb.linearVelocity = direction * speed * Time.deltaTime;
+       
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
@@ -39,8 +43,16 @@ public class Bullet : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Player"))
         {
+            
             var player = collision.gameObject.GetComponent<PlayerController>();
             player.IncrementHP(-DamageAmount);
+            Destroy(gameObject);
+           
+            
+
+        }
+        else if (collision.gameObject.CompareTag("Shield"))
+        {
             Destroy(gameObject);
         }
         if (collision.gameObject.CompareTag("Wall") | collision.gameObject.CompareTag("ground"))

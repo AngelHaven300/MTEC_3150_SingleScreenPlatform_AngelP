@@ -27,9 +27,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7069978933957710291}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 7.1140003, y: 0.16999999, z: 0}
-  m_LocalScale: {x: 0.54038, y: 0.54038, z: 0.54038}
+  m_LocalScale: {x: 0.7688348, y: 0.7688348, z: 0.7688348}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: eafb4c50d3d270f45ba60e5aab5286a1, type: 3}
+  m_Sprite: {fileID: 4027907115029014435, guid: 7d016297e2259c04b9ebdffbb9b48cde, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -107,7 +107,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PU_Jump
   sr: {fileID: 5927577625463470627}
   cc: {fileID: 0}
-  powerUpColor: {r: 0.35134435, g: 1, b: 0, a: 1}
+  powerUpColor: {r: 1, g: 1, b: 1, a: 1}
   effectsApplied: 0
   effectDuration: 10
 --- !u!58 &8527531709766226083
@@ -145,4 +145,4 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
+  m_Radius: 0.44768766
