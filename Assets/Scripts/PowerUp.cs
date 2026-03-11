@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class PowerUp : MonoBehaviour
 {
@@ -10,6 +12,7 @@ public class PowerUp : MonoBehaviour
     [HideInInspector] public bool effectsApplied = false;
     public float effectDuration;
     private float timeElapsedSinceEffect;
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
@@ -42,7 +45,9 @@ public class PowerUp : MonoBehaviour
                 Destroy(gameObject);
 
             }
+           
         }
+        
     }
     protected virtual void NegateEffect()
     {

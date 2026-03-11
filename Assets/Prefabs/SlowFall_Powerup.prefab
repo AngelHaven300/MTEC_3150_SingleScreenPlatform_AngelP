@@ -110,6 +110,10 @@ MonoBehaviour:
   powerUpColor: {r: 1, g: 1, b: 1, a: 1}
   effectsApplied: 0
   effectDuration: 10
+  PowerUpBar: {fileID: 0}
+  PowerUpFill: {fileID: 0}
+  SlowFall: {fileID: 0}
+  RunNGun: {fileID: 0}
 --- !u!58 &8527531709766226083
 CircleCollider2D:
   m_ObjectHideFlags: 0

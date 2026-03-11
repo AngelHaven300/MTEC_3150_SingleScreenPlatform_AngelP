@@ -4,7 +4,7 @@ using UnityEngine;
 public class PowerUpSpawnPoint : MonoBehaviour
 {
     public GameObject[] powerUps;
-    public float spawnInterval = 40f;
+    public float spawnInterval = 60f;
     private float timeSinceLastSpawn;
     private GameObject currentPowerUp;
    

@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3587031281629251083}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.32800007, y: 0.29200006, z: 0}
   m_LocalScale: {x: 0.76883477, y: 0.76883477, z: 0.76883477}
   m_ConstrainProportionsScale: 0
@@ -108,7 +108,12 @@ MonoBehaviour:
   sr: {fileID: 4384132068671197420}
   cc: {fileID: 0}
   powerUpColor: {r: 1, g: 1, b: 1, a: 1}
+  effectsApplied: 0
   effectDuration: 10
+  PowerUpBar: {fileID: 0}
+  PowerUpFill: {fileID: 0}
+  SlowFall: {fileID: 0}
+  RunNGun: {fileID: 0}
 --- !u!58 &6782164218753245619
 CircleCollider2D:
   m_ObjectHideFlags: 0

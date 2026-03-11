@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,14 +18,13 @@ public class PlayerController : MonoBehaviour
     public int fastFallStrength;
     public float movementSpeed = 1.0f;
     public float jumpSpeed = 1.0f;
-    //public float fastFall = 5; 
     private float xMove;
     private float xVelocity;
     private float facingDirection;
     private float facingDown;
     private bool jumpFlag = false;
-    private bool fastFallFlag = false;
     private SpriteRenderer shieldSr;
+    private SpriteRenderer sr;
     private Rigidbody2D rb;
     [HideInInspector] public float slowFall = 1.0f;
     [HideInInspector] public float originalFall = 1.0f;
@@ -45,8 +45,10 @@ public class PlayerController : MonoBehaviour
     private float nextFireTime = 0f;
     private bool meleeTriggered = false;
     [HideInInspector] public bool fullAuto = false;
-    [HideInInspector] public float fireRate = 0.1f; 
-    
+    [HideInInspector] public float fireRate = 0.1f;
+
+    private Animator anim;
+
     void Start()
     {
         elapsedTimeSinceShield = meleeCooldownTime;
@@ -55,6 +57,8 @@ public class PlayerController : MonoBehaviour
         facingDirection = 1;
         facingDown = 0;
         originalFall = rb.gravityScale;
+        sr = GetComponentInChildren<SpriteRenderer>();
+        anim = GetComponentInChildren<Animator>();
     }
 
     void Update()
@@ -63,17 +67,14 @@ public class PlayerController : MonoBehaviour
         xMove = Input.GetAxisRaw("Horizontal");
         shootDown = Input.GetAxisRaw("Vertical");
         AmountOfHearts();
-        if (Input.GetKeyDown(KeyCode.LeftShift)) fastFallFlag = true;
-        else
-        {
-            fastFallFlag = false;
-        }
+     
 
         if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
         {
+            anim.SetTrigger("jump");
             jumpFlag = true;
         }
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(1))
         {
             if (elapsedTimeSinceShield >= meleeCooldownTime)
             {
@@ -81,13 +82,13 @@ public class PlayerController : MonoBehaviour
                 elapsedTimeSinceShield = 0;
             }   
         }
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(0))
         {
             RangedAttack();
         }
         else if (fullAuto)
         {
-            if (Input.GetMouseButton(1))
+            if (Input.GetMouseButton(0))
             {
                 if (Time.time > nextFireTime)
                 {
@@ -106,7 +107,20 @@ public class PlayerController : MonoBehaviour
         } 
         if (xMove != 0)
         {
+            anim.SetBool("running", true);
             facingDirection = xMove;
+            if (facingDirection > 0)
+            {
+                sr.flipX = false;
+            }
+            else
+            {
+                sr.flipX = true;
+            }
+        }
+        else
+        {
+            anim.SetBool("running", false);
         }
         if (meleeTriggered)
         {
@@ -120,9 +134,9 @@ public class PlayerController : MonoBehaviour
                 meleeShield.SetActive(false);
                 timeElapsedSinceMelee = 0;
                 meleeTriggered = false;
-                
+
             }
-            
+
         }
         float fillAmount = Mathf.Clamp01(elapsedTimeSinceShield / meleeCooldownTime);
         shieldBar.fillAmount = fillAmount;
@@ -138,14 +152,6 @@ public class PlayerController : MonoBehaviour
         {
             GetComponent<Rigidbody2D>().gravityScale = slowFall;
 
-        }
-        else if (fastFallFlag)
-        {
-            if (rb.linearVelocityY < 0)
-            {
-                GetComponent<Rigidbody2D>().gravityScale *= fastFallStrength;
-
-            }
         }
         else
         {
@@ -178,17 +184,14 @@ public class PlayerController : MonoBehaviour
             meleeShield.SetActive(false);
             meleeAttack.transform.localPosition = new Vector2(shieldOffset * facingDirection, meleeAttack.transform.localPosition.y);
 
-
-            //meleeAttack.transform.localScale = new Vector2(facingDirection, 1);
-
             if (facingDirection > 0) { meleeAttack.transform.rotation = Quaternion.identity; }
             else if (facingDirection < 0) { meleeAttack.transform.rotation = Quaternion.Euler(0, -180, 0); }
         }
     }
 
     private void RangedAttack()
-    {        
-
+    {
+        anim.SetTrigger("attack");
         if (facingDown == -1)
         {
             Vector3 posD = new Vector3(transform.position.x, transform.position.y + (attackOffset * facingDown), 0);
@@ -207,6 +210,10 @@ public class PlayerController : MonoBehaviour
         }
         
     }
+    private void OnLanding()
+    {
+        anim.SetTrigger("landed");
+    }
     
     private bool IsGrounded()
     {
@@ -214,14 +221,13 @@ public class PlayerController : MonoBehaviour
         float dist = GetComponent<Collider2D>().bounds.extents.y;
 
         return Physics2D.CircleCast(transform.position, radius, Vector2.down, dist, ground);
-        //if its not a platform parent it to null
-        //
+      
     }
     private void WhenOnPlatform()
     {
         if (IsGrounded())
         {
-            //Debug.Log("a");
+        
             float radius = GetComponent<Collider2D>().bounds.extents.x;
             float dist = GetComponent<Collider2D>().bounds.extents.y;
             RaycastHit2D hit;
@@ -305,6 +311,17 @@ public class PlayerController : MonoBehaviour
             collision.GetComponent<PowerUp>().ApplyEffect();
 
             Debug.Log("EffectApplied");
+        }
+    }
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("ground"))
+        {
+            OnLanding();
+        }
+        if ( collision.gameObject.CompareTag("platform"))
+        {
+            OnLanding();
         }
     }
 }
